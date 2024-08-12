@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Weather Forecast</title>
+    <!-- Include Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" />
+    <style>
+        /* Your CSS styles for button and header go here */
+          body {
+            /* Background image and general styles for the body */
+            background-image: url('Weather.jpg'); /* Provide the correct path to your image */
+            font-family: 'Arial', sans-serif;
+            background-size: cover;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            color: black;
+          }
+    
+          button {
+            /* Styling for the button */
+            background-color: #0d5fb1; /* Green background color */
+            color: white; /* White text color */
+            padding: 10px 20px; /* Padding around the text */
+            border: none; /* Remove the border */
+            cursor: pointer; /* Change cursor to a hand pointer on hover */
+            border-radius: 0.2cm;
+            margin-top: 10px;
+          }
+    
+          /* Change button style on hover */
+          button:hover {
+            background-color: #469f4a;
+          }
+    
+          /* Style the "Weather forecast" header */
+          h1 {
+            /* Styling for the header */
+            color: #333; /* Text color */
+            font-size: 24px; /* Font size */
+            margin: 10px 0; /* Margin around the header */
+            font-weight: bolder;
+            font-size: 60px;
+          }
+    
+          #weatherreport {
+            text-align: center;  /* text report which display wheather condition and temperature displays in center*/
+          }
+    </style>
+</head>
+
+<body>
+    <h1>Weather Forecast</h1>
+    <div class="container">
+        <form class="form-group">
+            <label for="city">Enter the location name:</label>
+            <input type="text" id="city" name="city" class="form-control">
+            <button type="button" id="weatherButton" class="btn btn-primary mt-3">
+                Get Weather
+            </button>
+        </form>
+    </div>
+
+    <div id="weatherreport">
+        <p id="Weather">Weather information will be displayed here</p>
+        <p id="current-weather"></p>
+    </div>
+
+    <script>
+        // JavaScript code for fetching and displaying weather data
+          document.getElementById('weatherButton').addEventListener('click', async function() {
+            const city = document.getElementById('city').value;
+            try {
+              const weatherData = await getWeather(city);
+              displayWeather(weatherData);
+            } catch (error) {
+              console.error('Error fetching data:', error);
+              document.getElementById('Weather').textContent = 'Something went wrong. Please try again.';
+            }
+          });
+    
+          async function getWeather(city) {
+            // Replace with your actual API key
+            const apiKey = 'b2e912948c23479e85764113230911'; // Replace with your actual API key from weatherapi.com
+            const apiUrl = `http://api.weatherapi.com/v1/current.json?key=${apiKey}&q=${city}&aqi=no`;
+    
+            const response = await fetch(apiUrl);
+            if (!response.ok) {
+              const data = await response.json();
+              throw Error(`Error: ${data.error.message}`);
+            }
+    
+            return response.json();
+          }
+    
+          function displayWeather(data) {
+            // Display weather information
+            document.getElementById('Weather').textContent = 'Temperature: ' + data.current.temp_c + '°C';
+            document.getElementById('current-weather').textContent = 'Weather condition: ' + data.current.condition.text;
+            // No need to change the background image here to keep it the same
+          }
+    </script>
+</body>
+
+</html>
